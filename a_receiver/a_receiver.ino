@@ -5,7 +5,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 
-const int n = 6;
+const int n = 4;
 #define OLED_RESET 4
 Adafruit_SSD1306 display(OLED_RESET);
 
@@ -39,7 +39,7 @@ const uint64_t pipe = 0xF0F0F0F0E2LL;
 void setup(void)
 {
   radio.begin();
-  radio.setAutoAck(true);
+  radio.setAutoAck(false);
   radio.setDataRate(RF24_250KBPS);
   
   radio.openReadingPipe(1, pipe);
@@ -60,13 +60,13 @@ void loop(void)
     unsigned long newsec = millis() / 1000;
     if (newsec != lastsec)
     {
+      printData(data);
       lastsec = newsec;
       packets = thispackets;
       thispackets = 0;
     }
 
     radio.read(&data, sizeof(Data));
-    printData(data);
     ++thispackets;
   }
 }
